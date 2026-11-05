@@ -13,12 +13,17 @@ A practical learning path from beginner to advanced: concepts, architecture, dia
 8. [Retrieval and reranking](RAG/08-retrieval.md)
 9. [Security](RAG/09-security.md)
 10. [Evaluation](RAG/10-evaluation.md)
-11. [Agentic RAG](RAG/11-agentic-rag.md)
-12. [Tools and technology choices](resources/tools.md)
-13. [Python local RAG starter](code-examples/python/README.md)
-14. [TypeScript RAG starter](code-examples/typescript/README.md)
-15. [Hands-on projects](projects/README.md)
-16. [Workflow illustrations](illustrations/rag-workflow.md)
+11. [Agentic RAG fundamentals](RAG/11-agentic-rag.md)
+12. [PDF and document ingestion](RAG/12-pdf-ingestion.md)
+13. [LLM answer generation](RAG/13-llm-generation.md)
+14. [FastAPI RAG service](RAG/14-fastapi-service.md)
+15. [Agentic RAG engineering](RAG/15-agentic-rag-engineering.md)
+16. [Production readiness and security](RAG/16-production-readiness.md)
+17. [Tools and technology choices](resources/tools.md)
+18. [Python RAG application](code-examples/python/README.md)
+19. [TypeScript RAG starter](code-examples/typescript/README.md)
+20. [Hands-on projects](projects/README.md)
+21. [Workflow illustrations](illustrations/rag-workflow.md)
 
 ## Repository layout
 - RAG: concepts, architecture, search, evaluation and security.
