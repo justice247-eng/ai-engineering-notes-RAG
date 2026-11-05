@@ -56,6 +56,7 @@ Endpoints:
 - `GET /health` — service status.
 - `POST /documents/upload` — upload a PDF, TXT, or Markdown file.
 - `POST /query` — retrieve evidence and, when configured, generate an answer.
+- `POST /agent/query` — let a bounded agent choose between the approved knowledge-base search and source-list tools.
 
 Example query body:
 
@@ -83,6 +84,8 @@ For hosted providers, use their documented base URL and model name, add the API 
 If no generation endpoint is configured, the application still performs retrieval and returns the passages and source metadata. It does not pretend that a language model generated an answer.
 
 ## Configuration
+
+Copy `.env.example` to `.env` in this folder to configure local settings. Keep real credentials in the private `.env` file or Codespaces secrets; never commit them.
 
 | Variable | Purpose | Default |
 |---|---|---|
