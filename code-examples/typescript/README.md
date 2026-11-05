@@ -13,6 +13,23 @@ This folder introduces the TypeScript side of RAG. The first example implements 
     npm install -D typescript tsx @types/node
     npx tsx chunking.ts
 
+## Call the Python RAG API from TypeScript
+
+Start the Python API using the instructions in `../python/README.md`. In another terminal, install the small TypeScript runner:
+
+```bash
+npm init -y
+npm install -D typescript tsx @types/node
+```
+
+Ask a question:
+
+```bash
+npx tsx rag-api-client.ts "What is retrieval-augmented generation?"
+```
+
+The client uses Node.js 20's built-in `fetch` and needs no additional HTTP library. If the API is hosted at another address, set `RAG_API_URL` before running it.
+
 ## What comes next
 
 A complete TypeScript RAG service typically adds:
