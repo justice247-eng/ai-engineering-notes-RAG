@@ -159,16 +159,21 @@ class AgenticRAG:
             messages.append(assistant_message)
             for call in tool_calls:
                 if tool_steps >= max_steps:
-                    break
-                function = call.get("function", {})
-                name = function.get("name", "")
-                result = self._call_tool(
-                    name, function.get("arguments", "{}")
-                )
-                if name == "search_knowledge_base":
-                    for item in result.get("results", []):
-                        if item not in sources:
-                            sources.append(item)
+                    result = {"error": "The agent tool-step limit has been reached."}
+                else:
+                    function = call.get("function", {})
+                    name = function.get("name", "")
+                    result = self._call_tool(
+                        name, function.get("arguments", "{}")
+                    )
+                    if name == "search_knowledge_base":
+                        for item in result.get("results", []):
+                            if item not in sources:
+                                sources.append(item)
+                    tool_steps += 1
+
+                # Every tool call in the assistant message receives a result,
+                # even when the step budget has been exhausted.
                 messages.append(
                     {
                         "role": "tool",
@@ -176,7 +181,6 @@ class AgenticRAG:
                         "content": json.dumps(result),
                     }
                 )
-                tool_steps += 1
 
         return {
             "question": question,
