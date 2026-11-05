@@ -12,17 +12,20 @@ A practical learning path from beginner to advanced: concepts, architecture, dia
 7. [Vector databases](RAG/07-vector-databases.md)
 8. [Retrieval and reranking](RAG/08-retrieval.md)
 9. [Security](RAG/09-security.md)
-10. [Tools and technology choices](resources/tools.md)
-11. [Python starter project](code-examples/python/README.md)
-12. [Projects](projects/README.md)
-13. [Workflow illustrations](illustrations/rag-workflow.md)
+10. [Evaluation](RAG/10-evaluation.md)
+11. [Agentic RAG](RAG/11-agentic-rag.md)
+12. [Tools and technology choices](resources/tools.md)
+13. [Python local RAG starter](code-examples/python/README.md)
+14. [TypeScript RAG starter](code-examples/typescript/README.md)
+15. [Hands-on projects](projects/README.md)
+16. [Workflow illustrations](illustrations/rag-workflow.md)
 
 ## Repository layout
 - RAG: concepts, architecture, search, evaluation and security.
 - code-examples: practical implementations in Python and TypeScript.
 - illustrations: workflow diagrams.
 - projects: guided exercises with acceptance criteria.
-- resources: tools, official documentation and study roadmap.
+- resources: tools and official documentation.
 
 ## Study method
 Read a lesson, draw the process, run the example, change a parameter, test the result, and explain the idea in your own words. Do not just copy code.
