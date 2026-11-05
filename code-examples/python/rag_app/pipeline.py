@@ -14,14 +14,17 @@ class RAGPipeline:
         self.store = VectorStore(config)
         self.generator = OpenAICompatibleGenerator(config)
 
-    def ingest_file(self, path: str | Path) -> dict:
+    def ingest_file(
+        self, path: str | Path, source_name: str | None = None
+    ) -> dict:
         file_path = Path(path)
+        display_name = source_name or file_path.name
         text = extract_text(file_path)
         chunks = chunk_text(text)
         document_id = make_document_id(file_path)
         count = self.store.add_chunks(
             chunks=chunks,
-            source=file_path.name,
+            source=display_name,
             document_id=document_id,
         )
         return {
