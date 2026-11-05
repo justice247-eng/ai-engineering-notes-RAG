@@ -1,0 +1,18 @@
+[
+  {
+    "question": "What services are part of hospitality?",
+    "expected_sources": ["hospitality.txt"]
+  },
+  {
+    "question": "What can be included in a tourism product?",
+    "expected_sources": ["tourism.txt"]
+  },
+  {
+    "question": "How does semantic search compare a question with documents?",
+    "expected_sources": ["embeddings.txt"]
+  },
+  {
+    "question": "Does an embedding prove that information is true?",
+    "expected_sources": ["embeddings.txt"]
+  }
+]
