@@ -1,51 +1,112 @@
-# Python Local RAG Starter
+# Python RAG Learning Project
 
-This first practical exercise builds a **retrieval-only** pipeline on your computer. It teaches ingestion, chunking, embeddings, vector storage and semantic search before adding an LLM.
+This folder contains two practical exercises:
+
+- `rag_local.py`: a small retrieval-only demo for learning embeddings and vector search.
+- `rag_app/`: a modular document RAG application with PDF/TXT/Markdown ingestion, ChromaDB storage, source citations, a command-line interface, a FastAPI service, and optional LLM answer generation.
 
 ## Requirements
 
-- Python 3.10 or newer recommended.
-- Internet for the first model download.
-- No paid API key is required for this local retrieval exercise.
+- Python 3.12 recommended.
+- Internet access for the first download of the embedding model.
+- No paid API key is required for ingestion or retrieval.
+- Answer generation is optional and requires an OpenAI-compatible chat endpoint. A local Ollama endpoint can be used; hosted providers may charge for usage.
 
-## Setup
+## Install
 
-    python -m venv .venv
+From the repository root, activate the virtual environment you created, then:
 
-Activate it:
+```bash
+uv pip install -r code-examples/python/requirements.txt
+```
 
-Windows PowerShell:
-    .venv\Scripts\Activate.ps1
+Alternatively, use `python -m pip install -r code-examples/python/requirements.txt`.
 
-macOS/Linux:
-    source .venv/bin/activate
+## Run the retrieval-only lesson
 
-Install:
+```bash
+cd code-examples/python
+python rag_local.py
+```
 
-    pip install -r requirements.txt
+This first demo uses a few built-in passages. It retrieves similar text but does not generate an answer with an LLM.
 
-Run:
+## Run the full RAG application
 
-    python rag_local.py
+Run these commands from `code-examples/python`:
 
-## What the program does
+```bash
+python -m rag_app.cli ingest sample_docs
+python -m rag_app.cli ask "What is retrieval-augmented generation?"
+python -m rag_app.cli sources
+```
 
-1. Defines a few sample knowledge passages.
-2. Splits each passage into short chunks.
-3. Creates local embeddings with Sentence Transformers.
-4. Stores the vectors and text in a persistent Chroma collection.
-5. Embeds a question and retrieves the closest passages.
-6. Prints each result and its source.
+The first ingestion or query downloads the configured Sentence Transformers model if it is not already cached. The default model is `sentence-transformers/all-MiniLM-L6-v2`.
 
-## Files
+### Start the API
 
-- rag_local.py — complete retrieval demo.
-- requirements.txt — Python dependencies.
+```bash
+uvicorn rag_app.api:app --reload --host 0.0.0.0 --port 8000
+```
 
-## Experiment
+Open the forwarded port 8000 in Codespaces. The interactive API documentation is available at `/docs`.
 
-Change the question, chunk size, overlap and number of results. Record which passages are retrieved. Try a question whose answer is absent and notice that a vector database still returns the nearest available text; retrieval similarity alone does not prove that evidence answers the question.
+Endpoints:
 
-## Next step
+- `GET /health` — service status.
+- `POST /documents/upload` — upload a PDF, TXT, or Markdown file.
+- `POST /query` — retrieve evidence and, when configured, generate an answer.
 
-Add a generation model only after you understand retrieval. Give the model the retrieved passages, require it to say when evidence is insufficient, and display real source metadata. Never hard-code an API key or commit a .env file.
+Example query body:
+
+```json
+{
+  "question": "What does chunk overlap do?",
+  "top_k": 4
+}
+```
+
+### Optional answer generation
+
+Copy `.env.example` to `.env` and configure an OpenAI-compatible endpoint. For a local Ollama server that exposes its OpenAI-compatible API, an example configuration is:
+
+```dotenv
+LLM_BASE_URL=http://localhost:11434/v1
+LLM_MODEL=qwen2.5:3b
+LLM_API_KEY=
+```
+
+The model must already be available to that Ollama server. In a cloud Codespace, `localhost` refers to the Codespace itself, not your personal computer. Do not assume a local Ollama server on your laptop is reachable from Codespaces.
+
+For hosted providers, use their documented base URL and model name, add the API key only to your private `.env` or Codespaces secret, and check current pricing. Never commit real credentials.
+
+If no generation endpoint is configured, the application still performs retrieval and returns the passages and source metadata. It does not pretend that a language model generated an answer.
+
+## Configuration
+
+| Variable | Purpose | Default |
+|---|---|---|
+| `RAG_DATA_DIR` | Local data directory | `./data` |
+| `CHROMA_PATH` | Persistent Chroma database | `./data/chroma` |
+| `CHROMA_COLLECTION` | Collection name | `rag_documents` |
+| `EMBEDDING_MODEL` | Sentence Transformers model | `sentence-transformers/all-MiniLM-L6-v2` |
+| `RAG_TOP_K` | Default number of retrieved chunks | `4` |
+| `MAX_UPLOAD_MB` | Maximum upload size | `15` |
+| `LLM_BASE_URL` | OpenAI-compatible API base URL | unset |
+| `LLM_MODEL` | Chat model name | unset |
+| `LLM_API_KEY` | Optional provider key | unset |
+
+## Run tests
+
+From `code-examples/python`:
+
+```bash
+python -m pytest -q
+```
+
+## Important limitations
+
+- The initial PDF extractor reads embedded text. Scanned image-only PDFs need OCR, which is not included yet.
+- The default chunker is deliberately simple and word-based. Production systems should evaluate chunking against their document types and question set.
+- Similarity search returns candidates, not proof. Review citations and evaluate answer quality.
+- This learning API is not production-hardened. Add authentication, per-user document isolation, rate limits, malware scanning, stronger upload controls, observability, and deployment-specific secret management before exposing it publicly.
