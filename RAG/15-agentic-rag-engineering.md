@@ -97,3 +97,30 @@ Measure more than whether the final answer sounds fluent:
 - Did it retrieve authorized sources only?
 - Are the citations correct?
 - Did it stop when evidence was insufficient?
+
+
+## 8. Run the learning implementation
+
+The Python project includes a bounded implementation in `code-examples/python/rag_app/agent.py`. It exposes only two read-only tools:
+
+- search indexed knowledge-base passages;
+- list indexed source filenames.
+
+Start the API from `code-examples/python`:
+
+```bash
+uvicorn rag_app.api:app --reload --host 0.0.0.0 --port 8000
+```
+
+Then send a request to `POST /agent/query`:
+
+```json
+{
+  "question": "Find the notes that explain embeddings and summarize them.",
+  "max_steps": 3
+}
+```
+
+The endpoint requires an OpenAI-compatible model endpoint with tool-calling support. If no model is configured, it returns a clear configuration message. The agent has a maximum of five tool steps and cannot run shell commands, access arbitrary files, browse the web or perform external actions.
+
+This is a teaching implementation, not a production agent. Add authentication and per-user document authorization before indexing private or multi-user data.
