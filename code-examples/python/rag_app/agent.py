@@ -53,7 +53,9 @@ class AgenticRAG:
     def enabled(self) -> bool:
         return bool(self.base_url and self.model)
 
-    def _call_tool(self, name: str, raw_arguments: str) -> dict:
+    def _call_tool(
+        self, name: str, raw_arguments: str, citation_prefix: str
+    ) -> dict:
         try:
             arguments = json.loads(raw_arguments or "{}")
         except json.JSONDecodeError:
@@ -77,7 +79,7 @@ class AgenticRAG:
             return {
                 "results": [
                     {
-                        "citation": f"[{index}]",
+                        "citation": f"[{citation_prefix}-{index}]",
                         "source": hit["source"],
                         "chunk_index": hit["chunk_index"],
                         "text": hit["text"],
@@ -164,7 +166,9 @@ class AgenticRAG:
                     function = call.get("function", {})
                     name = function.get("name", "")
                     result = self._call_tool(
-                        name, function.get("arguments", "{}")
+                        name,
+                        function.get("arguments", "{}"),
+                        citation_prefix=f"S{tool_steps + 1}",
                     )
                     if name == "search_knowledge_base":
                         for item in result.get("results", []):
