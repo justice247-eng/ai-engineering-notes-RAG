@@ -39,6 +39,7 @@ Run these commands from `code-examples/python`:
 python -m rag_app.cli ingest sample_docs
 python -m rag_app.cli ask "What is retrieval-augmented generation?"
 python -m rag_app.cli sources
+python evaluate_retrieval.py
 ```
 
 The first ingestion or query downloads the configured Sentence Transformers model if it is not already cached. The default model is `sentence-transformers/all-MiniLM-L6-v2`.
