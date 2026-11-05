@@ -28,7 +28,7 @@ class RAGPipeline:
             document_id=document_id,
         )
         return {
-            "source": file_path.name,
+            "source": display_name,
             "document_id": document_id,
             "chunks_added": count,
         }
@@ -39,7 +39,7 @@ class RAGPipeline:
 
         hits = self.store.search(
             question,
-            top_k=top_k or self.config.default_top_k,
+            top_k=(top_k if top_k is not None else self.config.default_top_k),
         )
         if not hits:
             return {
