@@ -81,6 +81,17 @@ class VectorStore:
             )
         return hits
 
+    def delete_source(self, source: str) -> int:
+        """Remove previously indexed chunks for one source filename."""
+        records = self.collection.get(
+            where={"source": source},
+            include=["metadatas"],
+        )
+        ids = records["ids"]
+        if ids:
+            self.collection.delete(ids=ids)
+        return len(ids)
+
     def list_sources(self) -> list[str]:
         records = self.collection.get(include=["metadatas"])
         return sorted(
