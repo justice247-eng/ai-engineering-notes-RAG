@@ -21,7 +21,10 @@ class RAGPipeline:
         display_name = source_name or file_path.name
         text = extract_text(file_path)
         chunks = chunk_text(text)
-        document_id = make_document_id(file_path)
+        document_id = make_document_id(file_path, display_name)
+        # Re-ingesting a source replaces its previous chunks instead of
+        # leaving stale passages in the vector collection.
+        self.store.delete_source(display_name)
         count = self.store.add_chunks(
             chunks=chunks,
             source=display_name,
