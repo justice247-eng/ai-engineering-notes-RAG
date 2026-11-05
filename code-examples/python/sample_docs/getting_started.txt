@@ -1,0 +1,7 @@
+Retrieval-Augmented Generation (RAG) combines information retrieval with language model generation. A RAG application first indexes trusted documents, then retrieves relevant passages for a user's question. The retrieved passages are provided to a language model as context so the answer can be grounded in the available evidence.
+
+An embedding model converts text into a vector, which is a list of numbers. Texts with related meanings often have vectors that are close together in the embedding space. A vector database stores these vectors and supports similarity search.
+
+Chunking divides long documents into smaller passages. Overlap keeps a small amount of text from one chunk in the next chunk so that information near a boundary is less likely to be lost. Chunk size and overlap should be tested against the documents and questions in a real application.
+
+RAG does not guarantee that an answer is correct. Retrieval can return irrelevant, incomplete, outdated, or malicious content. Applications should show sources, evaluate retrieval quality, protect private documents, and allow the model to say when the evidence is insufficient.
