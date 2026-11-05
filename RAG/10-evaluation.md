@@ -31,3 +31,16 @@ Track latency, token usage, provider cost, retrieval errors, ingestion failures,
 | C | Paragraph | Hybrid | 20 | Yes | | | |
 
 Change one important variable at a time and record the result.
+
+## Run the sample retrieval evaluation
+
+The Python project includes a small labelled dataset at `code-examples/python/evaluation/retrieval_questions.json` and a script at `code-examples/python/evaluate_retrieval.py`.
+
+From `code-examples/python`:
+
+```bash
+python -m rag_app.cli ingest sample_docs
+python evaluate_retrieval.py
+```
+
+The script reports source-level Recall@k, Precision@k and Mean Reciprocal Rank (MRR). These are teaching metrics for a tiny sample set. They do not measure answer faithfulness, citation correctness, latency at scale or production quality. Build a larger, representative, human-labelled test set before comparing real retrievers.
