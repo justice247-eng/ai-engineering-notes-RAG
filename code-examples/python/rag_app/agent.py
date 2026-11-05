@@ -135,7 +135,8 @@ class AgenticRAG:
         tool_steps = 0
         sources: list[dict] = []
 
-        while tool_steps < max_steps:
+        while True:
+            budget_exhausted = tool_steps >= max_steps
             response = httpx.post(
                 f"{self.base_url}/chat/completions",
                 headers=headers,
@@ -144,7 +145,9 @@ class AgenticRAG:
                     "temperature": 0.1,
                     "messages": messages,
                     "tools": TOOLS,
-                    "tool_choice": "auto",
+                    # After the tool budget is used, ask for a final response
+                    # without allowing any more tool calls.
+                    "tool_choice": "none" if budget_exhausted else "auto",
                 },
                 timeout=90.0,
             )
@@ -157,6 +160,17 @@ class AgenticRAG:
                     "question": question,
                     "answer": assistant_message.get("content") or (
                         "The agent did not return a text answer."
+                    ),
+                    "steps": tool_steps,
+                    "sources": sources,
+                }
+
+            if budget_exhausted:
+                return {
+                    "question": question,
+                    "answer": (
+                        "The agent reached its tool-step limit. The evidence "
+                        "gathered so far is returned below."
                     ),
                     "steps": tool_steps,
                     "sources": sources,
