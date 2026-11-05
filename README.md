@@ -32,6 +32,23 @@ A practical learning path from beginner to advanced: concepts, architecture, dia
 - projects: guided exercises with acceptance criteria.
 - resources: tools and official documentation.
 
+## Run the practical Python project
+
+In GitHub Codespaces, pull the latest repository changes and run:
+
+```bash
+git pull
+bash scripts/setup_rag.sh
+```
+
+This script installs the Python dependencies into the repository's `.venv` and runs the lightweight tests. To run the sample retrieval project:
+
+```bash
+bash scripts/run_rag_demo.sh
+```
+
+The full Python application and API instructions are in [the Python project guide](code-examples/python/README.md).
+
 ## Study method
 Read a lesson, draw the process, run the example, change a parameter, test the result, and explain the idea in your own words. Do not just copy code.
 
