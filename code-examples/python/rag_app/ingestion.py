@@ -58,7 +58,9 @@ def chunk_text(
     return chunks
 
 
-def make_document_id(path: str | Path) -> str:
-    """Create a stable identifier from a file's contents."""
-    digest = sha256(Path(path).read_bytes()).hexdigest()
-    return digest[:20]
+def make_document_id(path: str | Path, source_name: str | None = None) -> str:
+    """Create a stable identifier from file contents and its display name."""
+    digest = sha256()
+    digest.update(Path(path).read_bytes())
+    digest.update((source_name or Path(path).name).encode("utf-8"))
+    return digest.hexdigest()[:20]
