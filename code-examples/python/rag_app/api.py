@@ -7,6 +7,7 @@ from uuid import uuid4
 from fastapi import FastAPI, File, HTTPException, UploadFile
 from pydantic import BaseModel, Field
 
+from .agent import AgenticRAG
 from .config import settings
 from .pipeline import RAGPipeline
 
@@ -26,9 +27,19 @@ def get_pipeline() -> RAGPipeline:
     return RAGPipeline(settings)
 
 
+@lru_cache(maxsize=1)
+def get_agent() -> AgenticRAG:
+    return AgenticRAG(settings, get_pipeline().store)
+
+
 class QuestionRequest(BaseModel):
     question: str = Field(min_length=1, max_length=4000)
     top_k: int = Field(default=4, ge=1, le=20)
+
+
+class AgentQuestionRequest(BaseModel):
+    question: str = Field(min_length=1, max_length=4000)
+    max_steps: int = Field(default=3, ge=1, le=5)
 
 
 @app.get("/health")
@@ -76,5 +87,16 @@ async def upload_document(file: UploadFile = File(...)) -> dict:
 def query_documents(request: QuestionRequest) -> dict:
     try:
         return get_pipeline().ask(request.question, top_k=request.top_k)
+    except ValueError as error:
+        raise HTTPException(status_code=400, detail=str(error)) from error
+
+
+
+@app.post("/agent/query")
+def agent_query(request: AgentQuestionRequest) -> dict:
+    try:
+        return get_agent().ask(
+            request.question, max_steps=request.max_steps
+        )
     except ValueError as error:
         raise HTTPException(status_code=400, detail=str(error)) from error
