@@ -63,11 +63,9 @@ async def upload_document(file: UploadFile = File(...)) -> dict:
     stored_path.write_bytes(content)
 
     try:
-        result = get_pipeline().ingest_file(stored_path)
-        # Keep the original user filename as the source label in responses.
+        result = get_pipeline().ingest_file(stored_path, source_name=filename)
         # The file itself is stored under a random name to avoid path traversal
-        # and collisions.
-        result["source"] = filename
+        # and collisions, while citations retain the original filename.
         return result
     except (ValueError, OSError) as error:
         stored_path.unlink(missing_ok=True)
