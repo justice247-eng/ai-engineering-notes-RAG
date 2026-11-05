@@ -1,11 +1,15 @@
 """A bounded, read-only tool-using Agentic RAG loop."""
 
+from __future__ import annotations
+
 import json
+from typing import TYPE_CHECKING
 
 import httpx
 
-from .config import Settings
-from .store import VectorStore
+if TYPE_CHECKING:
+    from .config import Settings
+    from .store import VectorStore
 
 
 TOOLS = [
